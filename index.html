@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIXA - Next Gen AI Cinema</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { background: #050505; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 20px; }
+        .container { max-width: 900px; margin: auto; }
+        .video-card { background: #111; border: 1px solid #333; border-radius: 15px; padding: 15px; margin-bottom: 30px; }
+        video { width: 100%; border-radius: 10px; box-shadow: 0 0 20px rgba(0,255,150,0.1); }
+        h1 { font-size: 3rem; letter-spacing: -2px; color: #00ff96; margin-bottom: 5px; }
+        p.subtitle { color: #888; font-size: 1.1rem; margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VIXA</h1>
+        <p class="subtitle">Powered by X79 & AI Cinematic Generation</p>
+        <div id="video-list">
+            </div>
+    </div>
+
+    <script>
+        // === BỘ 3 CHÌA KHÓA CỦA CHỦ TỊCH ĐÃ ĐƯỢC LẮP RÁP ===
+        const SB_URL = 'https://bgsmnkeglqwfynjtrhgh.supabase.co'; 
+        const SB_KEY = 'sb_publishable_BzO7EWiD4MhUAEEhA74zmw_6NblJL07';
+        const ADS_LINK = 'https://www.effectivegatecpm.com/gn2n2v8eyx?key=6269ca8c008348158df2be23b0779920';
+        // ==================================================
+
+        const supabase = supabase.createClient(SB_URL, SB_KEY);
+
+        async function getVideos() {
+            let { data: videos, error } = await supabase.from('videos').select('*');
+            
+            const list = document.getElementById('video-list');
+            
+            if (error) {
+                list.innerHTML = `<p style="color: red;">Lỗi kết nối dữ liệu: ${error.message}</p>`;
+                return;
+            }
+
+            if (!videos || videos.length === 0) {
+                list.innerHTML = "<p>Chưa có video nào. Anh Quân hãy vào Supabase thêm link video nhé!</p>";
+                return;
+            }
+
+            videos.forEach(v => {
+                list.innerHTML += `
+                    <div class="video-card">
+                        <h2>${v.title}</h2>
+                        <video controls src="${v.video_url}" onplay="window.open('${ADS_LINK}', '_blank')"></video>
+                        <p style="color: #666;">Views: ${v.views_count}</p>
+                    </div>
+                `;
+            });
+        }
+        
+        getVideos();
+    </script>
+</body>
+</html>
